@@ -1,0 +1,31 @@
+name: part1
+on:
+  push:
+    branches:
+      - master
+      
+env:
+  name: "Udemy_IELTS_Speaking_Success_Get_a_Band_7_Plus_2020-7.part1_Downloadly.ir.rar"
+  comment: "Firefox Setup 79.0"
+  url: http://dl.downloadly.ir/Files/Elearning/Udemy_IELTS_Speaking_Success_Get_a_Band_7_Plus_2020-7.part1_Downloadly.ir.rar
+  file_name: "ielts part 1"
+  piece_size: 2^20 
+      
+jobs:
+  create:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Install mktorrent
+        run: sudo apt-get install mktorrent
+        
+      - name: Download file
+        run: wget -nv -O "$file_name" "$url"
+        
+      - name: Create torrent using mktorrent
+        run: mktorrent -c "$comment" -l $piece_size -o "${name}.torrent" -w "$url" "$file_name"
+        
+      - name: Upload torrent file
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.name }}
+          path: ${{ env.name }}.torrent
